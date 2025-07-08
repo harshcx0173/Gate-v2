@@ -17,7 +17,7 @@ import axios from "axios";
 import { useRouter } from "next/router";
 
 const baseURL =
-  typeof window !== "undefined" && window.location.hostname !== "http://localhost:"
+  typeof window !== "undefined" && window.location.hostname === "192.168.1.38"
     ? "http://192.168.1.38:8000"
     : "http://localhost:8000";
 
