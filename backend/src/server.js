@@ -47,49 +47,57 @@ require("dotenv").config();
 const http = require("http");
 const { Server } = require("socket.io");
 
+// Import Routes
 const authRoutes = require("./routes/auth");
 const trackerRoutes = require("./routes/tracker");
 const towerRoutes = require("./routes/towerRoutes");
-const dashboard = require("./routes/dashboard");
+const dashboardRoutes = require("./routes/dashboard");
 
+// Create Express app and HTTP server
 const app = express();
 const server = http.createServer(app);
 
-// ✅ CORS config (update your frontend URL if needed)
+// CORS Configuration
 const corsOptions = {
-  origin: ["http://localhost:3000", "http://127.0.0.1:3000"],
-  methods: ["GET", "POST"],
-  credentials: false,
+  origin: process.env.CLIENT_ORIGIN?.split(",") || ["http://localhost:3000"],
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true,
 };
 
-// ✅ Apply CORS to Express
 app.use(cors(corsOptions));
 app.use(express.json());
-
-// ✅ Handle OPTIONS preflight
 app.options("*", cors(corsOptions));
 
-// ✅ Socket.IO server with CORS
+// Initialize Socket.IO with CORS
 const io = new Server(server, {
   cors: corsOptions,
 });
-
-// ✅ Make io global
 global._io = io;
 
-// ✅ Routes
+// API Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/tracker", trackerRoutes);
 app.use("/api/towers", towerRoutes);
-app.use("/api/dashboard", dashboard);
+app.use("/api/dashboard", dashboardRoutes);
 
-// ✅ Connect DB and Start Server
-mongoose.connect(process.env.MONGO_URI).then(() => {
-  console.log("MongoDB connected");
+// 404 Handler
+app.use((req, res) => {
+  res.status(404).json({ message: "Route not found" });
+});
 
-  server.listen(8000, '0.0.0.0', () => {
-    console.log("Server running on http://localhost:8000");
+// Connect to MongoDB and start the server
+const PORT = process.env.PORT || 8000;
+
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+}).then(() => {
+  console.log("✅ MongoDB connected");
+
+  server.listen(PORT, '0.0.0.0', () => {
+    console.log(`🚀 Server running on http://localhost:${PORT}`);
   });
 }).catch(err => {
-  console.error("MongoDB connection failed:", err);
+  console.error("❌ MongoDB connection failed:", err.message);
+  process.exit(1);
 });
