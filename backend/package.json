@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "prebuild": "rimraf dist",
     "dev": "nodemon dist/server.js",
-    "build": "npx babel . --out-dir dist --ignore node_modules",
+    "build": "npx babel controllers middleware models routes server.js --out-dir dist --ignore node_modules",
     "start": "node dist/server.js"
   },
   "keywords": [],
@@ -26,6 +27,7 @@
     "@babel/cli": "^7.28.0",
     "@babel/core": "^7.28.0",
     "@babel/preset-env": "^7.28.0",
-    "nodemon": "^3.1.10"
+    "nodemon": "^3.1.10",
+    "rimraf": "^6.0.1"
   }
 }
