@@ -15,7 +15,7 @@ const app = express();
 const server = http.createServer(app); // ✅ Use HTTP server
 const io = new Server(server, {
   cors: {
-    origin: "*", // 👈 adjust as needed
+    origin: "*", 
   },
 });
 
