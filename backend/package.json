@@ -4,9 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon src/server.js",
-    "build": "babel src -d dist",
+    "dev": "nodemon dist/server.js",
+    "build": "npx babel . --out-dir dist --ignore node_modules",
     "start": "node dist/server.js"
   },
   "keywords": [],

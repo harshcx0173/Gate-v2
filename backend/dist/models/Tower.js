@@ -1,7 +1,5 @@
-"use strict";
-
-var mongoose = require('mongoose');
-var towerSchema = new mongoose.Schema({
+const mongoose = require('mongoose');
+const towerSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true
@@ -10,8 +8,8 @@ var towerSchema = new mongoose.Schema({
     type: String,
     // <-- Make sure it's a string
     required: true,
-    "default": "0" // Default "0" if no value is provided
+    default: "0" // Default "0" if no value is provided
   }
 });
-var Tower = mongoose.model("Tower", towerSchema);
+const Tower = mongoose.model("Tower", towerSchema);
 module.exports = Tower;

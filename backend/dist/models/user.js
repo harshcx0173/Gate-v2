@@ -1,6 +1,4 @@
-"use strict";
-
-var mongoose = require("mongoose");
+const mongoose = require("mongoose");
 
 // const userSchema = new mongoose.Schema({
 //   fullName: String,
@@ -37,7 +35,7 @@ var mongoose = require("mongoose");
 
 // module.exports = mongoose.model("User", userSchema);
 
-var userSchema = new mongoose.Schema({
+const userSchema = new mongoose.Schema({
   // Existing fields
   fullName: String,
   email: {
@@ -55,18 +53,18 @@ var userSchema = new mongoose.Schema({
   // For login OTP expiry
   isApproved: {
     type: Boolean,
-    "default": false
+    default: false
   },
   isDeclined: {
     type: Boolean,
-    "default": true // Note: This defaults to true in your original schema
+    default: true // Note: This defaults to true in your original schema
   },
   isOwner: Boolean,
   maintenanceDue: Boolean,
   // New society management fields
   residentType: {
     type: String,
-    "enum": ['owner', 'tenant', 'family']
+    enum: ['owner', 'tenant', 'family']
     // This will work with your existing isOwner field
     // where 'owner' corresponds to isOwner: true
   },
@@ -79,7 +77,7 @@ var userSchema = new mongoose.Schema({
   // Additional metadata
   registeredAt: {
     type: Date,
-    "default": Date.now
+    default: Date.now
   },
   lastLogin: Date
 });
