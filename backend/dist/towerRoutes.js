@@ -2,7 +2,7 @@
 
 var express = require('express');
 var router = express.Router();
-var towerController = require('../controllers/towerController');
+var towerController = require('./towerController');
 router.get('/', towerController.getTowers);
 router.post('/', towerController.createTower);
 router.put('/:id', towerController.updateTower);
