@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "prebuild": "rimraf dist",
+    "prebuild": "npx rimraf dist",
     "dev": "nodemon dist/server.js",
     "build": "npx babel controllers middleware models routes server.js --out-dir dist --ignore node_modules",
     "start": "node dist/server.js"
