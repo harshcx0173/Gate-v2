@@ -8,10 +8,10 @@ var http = require("http"); // ✅ Add this
 var _require = require("socket.io"),
   Server = _require.Server; // ✅ Add this
 
-var authRoutes = require("./auth");
-// var trackerRoutes = require("./tracker");
-var towerRoutes = require("./towerRoutes");
-var dashboard = require("./dashboard");
+var authRoutes = require("./routes/auth");
+var trackerRoutes = require("./routes/tracker");
+var towerRoutes = require("./routes/towerRoutes");
+var dashboard = require("./routes/dashboard");
 var app = express();
 var server = http.createServer(app); // ✅ Use HTTP server
 var io = new Server(server, {
@@ -25,7 +25,7 @@ global._io = io;
 app.use(cors());
 app.use(express.json());
 app.use("/api/auth", authRoutes);
-// app.use("/api/tracker", trackerRoutes);
+app.use("/api/tracker", trackerRoutes);
 app.use("/api/towers", towerRoutes);
 app.use("/api/dashboard", dashboard);
 
