@@ -30,16 +30,17 @@ app.use("/api/tracker", trackerRoutes);
 app.use("/api/towers", towerRoutes);
 app.use("/api/dashboard", dashboard);
 
+const PORT = process.env.PORT || 5000;
+
 // ✅ CONNECT DB + START
 mongoose.connect(process.env.MONGO_URI).then(() => {
   console.log("MongoDB connected");
 
-  server.listen(8000, '0.0.0.0', () => {
-    console.log(`Server is running on port ${PORT}`)
+  
+  server.listen(PORT, "0.0.0.0", () => {
+    console.log(`Server running on port ${PORT}`);
   });
 });
-
-
 
 // const express = require("express");
 // const http = require("http");
