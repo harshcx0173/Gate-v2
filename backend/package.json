@@ -1,33 +1,29 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "prebuild": "npx rimraf dist",
-    "dev": "nodemon dist/server.js",
-    "start": "node dist/server.js",
-    "build": "npx babel . --out-dir dist --ignore node_modules,dist"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
   },
-  "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "bcryptjs": "^3.0.2",
+    "axios": "^1.9.0",
+    "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
-    "express": "^5.1.0",
-    "express-validator": "^7.2.1",
-    "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.13.2",
-    "nodemailer": "^6.10.1",
-    "rimraf": "^6.0.1",
-    "socket.io": "^4.8.1"
+    "express": "^4.21.2",
+    "gridfs-stream": "^1.1.1",
+    "jsonwebtoken": "^9.0.0",
+    "mongodb": "^5.6.0",
+    "mongoose": "^7.3.0",
+    "multer": "^1.4.5-lts.1",
+    "multer-gridfs-storage": "^5.0.2",
+    "nodemon": "^2.0.22",
+    "socket.io": "^4.8.1",
+    "validator": "^13.9.0"
   },
-  "devDependencies": {
-    "@babel/cli": "^7.28.0",
-    "@babel/core": "^7.28.0",
-    "@babel/preset-env": "^7.28.0",
-    "nodemon": "^3.1.10"
-  }
+  "description": ""
 }
