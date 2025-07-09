@@ -79,7 +79,7 @@ export default function Register() {
 
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/auth/register",
+        "https://gate-v2.onrender.com/api/auth/register",
         {
           fullName,
           email,
@@ -104,7 +104,7 @@ export default function Register() {
   useEffect(() => {
     const fetchTowers = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/api/towers");
+        const response = await axios.get("https://gate-v2.onrender.com/api/towers");
         setAvailableTowers(response.data);
         // console.log(availableTowers)
       } catch (error) {

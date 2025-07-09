@@ -51,7 +51,7 @@ export default function SecurityRegister() {
 
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/auth/register",
+        "https://gate-v2.onrender.com/api/auth/register",
         {
           fullName,
           email,

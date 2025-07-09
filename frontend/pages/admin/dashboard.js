@@ -82,7 +82,7 @@ import axios from "axios";
 // useEffect(() => {
 //   const fetchTowerStats = async () => {
 //     try {
-//       const res = await axios.get("http://localhost:8000/api/towers");
+//       const res = await axios.get("https://gate-v2.onrender.com/api/towers");
 //       const towers = res.data || [];
 
 //       const totalTowers = towers.length;
@@ -291,7 +291,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8000/api/dashboard")
+      .get("https://gate-v2.onrender.com/api/dashboard")
       .then((res) => setStats(res.data))
       .catch((err) => console.error("Dashboard stats fetch error:", err));
   }, []);

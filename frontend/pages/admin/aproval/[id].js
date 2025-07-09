@@ -12,7 +12,7 @@ const ApproveUserPage = () => {
 
     const approveUser = async () => {
       try {
-        await axios.patch(`http://localhost:8000/api/auth/admin/approve-user/${id}`);
+        await axios.patch(`https://gate-v2.onrender.com/api/auth/admin/approve-user/${id}`);
         setStatus("✅ User approved successfully!");
       } catch (err) {
         console.error(err);

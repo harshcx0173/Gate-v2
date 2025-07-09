@@ -18,7 +18,7 @@ export default function ForgotPassword() {
 
   const handleSendOtp = async () => {
     try {
-      const res = await axios.post("http://localhost:8000/api/auth/send-otp", { email });
+      const res = await axios.post("https://gate-v2.onrender.com/api/auth/send-otp", { email });
       setOtpToken(res.data.otpToken);
       localStorage.setItem("otpToken", res.data.otpToken); // store temporarily
       alert("OTP sent to email!");

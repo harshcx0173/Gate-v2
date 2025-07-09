@@ -20,7 +20,7 @@ export default function ResetPassword() {
     if (!otpToken) return alert("Missing OTP token!");
 
     try {
-      await axios.post("http://localhost:8000/api/auth/reset-password", {
+      await axios.post("https://gate-v2.onrender.com/api/auth/reset-password", {
         otp,
         newPassword,
         otpToken,

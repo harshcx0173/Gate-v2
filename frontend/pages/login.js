@@ -18,8 +18,8 @@ import { useRouter } from "next/router";
 
 const baseURL =
   typeof window !== "undefined" && window.location.hostname === "192.168.1.38"
-    ? "https://gate-v2-production-8b45.up.railway.app"
-    : "https://gate-v2-production-8b45.up.railway.app";
+    ? "https://gate-v2.onrender.com"
+    : "https://gate-v2.onrender.com";
 
 
 export default function Login() {

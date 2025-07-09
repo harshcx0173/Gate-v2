@@ -33,8 +33,8 @@ export default function OTP() {
       }
       const baseURL =
         typeof window !== "undefined" && window.location.hostname === "192.168.1.38"
-          ? "http://192.168.1.38:8000"
-          : "http://localhost:8000";
+          ? "https://gate-v2.onrender.com"
+          : "https://gate-v2.onrender.com";
       const res = await fetch(`${baseURL}/api/auth/verify-otp-login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
