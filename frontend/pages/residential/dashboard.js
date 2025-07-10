@@ -1,11 +1,267 @@
 import useRoleGuard from "@/hooks/useRoleGuard";
 import ResidentialLayout from "@/components/layout/ResidentialLayout";
-import { Box, Button, CircularProgress } from "@mui/material";
+import {
+  CircularProgress,
+  Box,
+  Card,
+  CardContent,
+  Typography,
+  Grid,
+  Paper,
+  Chip,
+  Avatar,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  ListItemSecondaryAction,
+  IconButton,
+  Badge,
+  Container,
+  AppBar,
+  Toolbar,
+  Stack,
+  Divider,
+  Alert,
+  AlertTitle,
+} from "@mui/material";
+import {
+  Home,
+  Build,
+  People,
+  CalendarToday,
+  AccessTime,
+  AccountCircle,
+  Assignment,
+  Receipt,
+  Announcement,
+  AttachMoney,
+  ChevronRight,
+  Warning,
+  Notifications,
+  WaterDrop,
+  FitnessCenter,
+  PendingActions,
+  MonetizationOn,
+  CalendarMonth,
+  CheckCircle,
+  Event,
+  Groups,
+} from "@mui/icons-material";
 import { useRouter } from "next/router";
+import { useState } from "react";
+import LiveTime from "@/components/liveTime";
+
 const ResidentDashboard = () => {
+  // Move all hooks to the top
   const isAuthorized = useRoleGuard("residential");
   const router = useRouter();
+  const [selectedCard, setSelectedCard] = useState(null);
+  const [hoveredCard, setHoveredCard] = useState(null);
 
+  // Define all your data here (always executed)
+  const stats = [
+    { title: "Apartments", count: 1, icon: Home, color: "#1976d2" },
+    { title: "Maintenance Dues", count: 1, icon: Build, color: "#ed6c02" },
+    { title: "Tenants", count: 0, icon: People, color: "#9c27b0" },
+  ];
+
+  const todaysBookings = [];
+
+  const rentPayments = [
+    {
+      id: 1,
+      apartment: "103",
+      userType: "Tenant",
+      amount: 2882.05,
+      date: "November 2021",
+      status: "Unpaid",
+    },
+  ];
+
+  const tickets = [];
+
+  const utilityBills = [
+    {
+      id: 1,
+      apartment: "103",
+      billType: "Water Bill",
+      amount: 243.44,
+      date: "30 June 2025",
+      status: "Unpaid",
+    },
+    {
+      id: 2,
+      apartment: "103",
+      billType: "Water Bill",
+      amount: 114.41,
+      date: "24 June 2025",
+      status: "Unpaid",
+    },
+    {
+      id: 3,
+      apartment: "103",
+      billType: "Water Bill",
+      amount: 415.7,
+      date: "08 July 2025",
+      status: "Unpaid",
+    },
+  ];
+
+  const totalDues = 773.55;
+
+  const notices = [
+    { id: 1, title: "Annual General Meeting Notice", priority: "high" },
+    {
+      id: 2,
+      title: "New Security Measures Implementation",
+      priority: "medium",
+    },
+    { id: 3, title: "Green Initiative Program", priority: "low" },
+    { id: 4, title: "Parking Policy Update", priority: "medium" },
+  ];
+
+  const totalDue = utilityBills.reduce((sum, bill) => sum + bill.amount, 0);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    router.push("/login");
+  };
+
+  const StatCard = ({
+    stat,
+    index,
+    navigationPath,
+    hoverState,
+    setHoverState,
+  }) => {
+    const isHovered = hoverState === stat.title;
+
+    const navigate = useRouter();
+
+    const handleTitleClick = (e) => {
+      e.stopPropagation(); // Prevent the click from triggering parent elements
+      if (navigationPath) {
+        navigate.push(navigationPath);
+      }
+    };
+    return (
+      <Card
+        elevation={0}
+        sx={{
+          height: "100%",
+          transition: "all 0.3s ease",
+          "&:hover": {
+            elevation: 2,
+            transform: "translateY(-1px)",
+          },
+          boxShadow: isHovered
+            ? "0px 4px 10px rgba(0,0,0,0.1)"
+            : "0px 1px 3px rgba(0,0,0,0.05)",
+          cursor: "pointer",
+          border: "1px solid #e0e0e0",
+          borderRadius: 2,
+        }}
+        // onMouseEnter={() => setHoverState?.(stat.title)}
+        // onMouseLeave={() => setHoverState?.(null)}
+        onClick={() => setSelectedCard(index)}
+      >
+        <CardContent sx={{ p: 2 }}>
+          <Stack direction="row" spacing={2} alignItems="center">
+            <Avatar sx={{ bgcolor: "#f5f5f5", width: 40, height: 40 }}>
+              <stat.icon sx={{ color: "#666", fontSize: 20 }} />
+            </Avatar>
+            <Box>
+              <Typography variant="body1" color="#333" fontWeight={400}>
+                {stat.title}
+              </Typography>
+              <Typography variant="h5" color="#333" fontWeight={600}>
+                {stat.count}
+              </Typography>
+            </Box>
+          </Stack>
+        </CardContent>
+      </Card>
+    );
+  };
+
+  const DashboardCard = ({
+    title,
+    subtitle,
+    children,
+    action,
+    alert,
+    isEmpty = false,
+    emptyIcon,
+    emptyText,
+  }) => (
+    <Card
+      elevation={0}
+      sx={{
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        border: "1px solid #e0e0e0",
+        borderRadius: 2,
+      }}
+    >
+      <CardContent sx={{ flexGrow: 1, p: 3 }}>
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center"
+          mb={2}
+        >
+          <Box>
+            <Typography
+              variant="h6"
+              component="div"
+              fontWeight={500}
+              color="#333"
+            >
+              {title}
+            </Typography>
+            {subtitle && (
+              <Typography variant="body2" color="#999" sx={{ mt: 0.5 }}>
+                {subtitle}
+              </Typography>
+            )}
+          </Box>
+          {action && action}
+        </Stack>
+        {alert && <Box mb={2}>{alert}</Box>}
+
+        {isEmpty ? (
+          <Box textAlign="center" py={4}>
+            <Avatar
+              sx={{
+                bgcolor: "#f5f5f5",
+                width: 40,
+                height: 40,
+                mx: "auto",
+                mb: 2,
+              }}
+            >
+              {emptyIcon}
+            </Avatar>
+            <Typography
+              variant="body1"
+              color="#999"
+              fontWeight={400}
+              fontSize={14}
+            >
+              {emptyText}
+            </Typography>
+          </Box>
+        ) : (
+          <Box sx={{ maxHeight: 320, overflowY: "auto" }}>{children}</Box>
+        )}
+      </CardContent>
+    </Card>
+  );
+
+  // Handle loading state at the end of render
   if (!isAuthorized) {
     return (
       <Box
@@ -18,15 +274,327 @@ const ResidentDashboard = () => {
       </Box>
     );
   }
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("role");
-    router.push("/login");
-  };
+
   return (
-    <Box>
-      <h1>Residential Dashboard</h1>
-      <Button onClick={handleLogout}>Logout</Button>
+    <Box sx={{ flexGrow: 1, bgcolor: "#f8f9fa", minHeight: "100vh" }}>
+      {/* Header */}
+      <AppBar
+        position="static"
+        elevation={0}
+        sx={{
+          bgcolor: "white",
+          color: "#333",
+          borderBottom: "1px solid #e0e0e0",
+        }}
+      >
+        <Toolbar sx={{ py: 1 }}>
+          <Typography
+            variant="h5"
+            component="div"
+            sx={{ flexGrow: 1, fontWeight: 600, color: "#333" }}
+          >
+            Dashboard
+          </Typography>
+          {/* <Stack direction="row" spacing={1} alignItems="center">
+            <CalendarToday sx={{ fontSize: 18, color: "#666" }} />
+            <Typography variant="body2" color="#666" fontWeight={500}>
+              Thursday, 10 Jul, 03:33 PM
+            </Typography>
+          </Stack> */}
+             <LiveTime />
+        </Toolbar>
+      </AppBar>
+
+      <Container maxWidth="xl" sx={{ py: 3 }}>
+        {/* Stats Cards */}
+        <Grid container spacing={3} sx={{ mb: 3 }}>
+          {stats.map((stat, index) => (
+            <Grid item size={{ xs: 12, md: 4, lg: 4 }} key={index}>
+              <StatCard stat={stat} index={index} />
+            </Grid>
+          ))}
+        </Grid>
+
+        {/* Main Dashboard Grid */}
+        <Grid container spacing={3}>
+          {/* Today's Bookings */}
+          <Grid item size={{ xs: 12, lg: 6 }}>
+            <DashboardCard
+              title="Today's Bookings"
+              subtitle="Thursday, 10 Jul 2025"
+              isEmpty={todaysBookings.length === 0}
+              emptyIcon={<Event sx={{ fontSize: 22, color: "#666" }} />}
+              emptyText="No bookings found"
+              setHoverState={setHoveredCard}
+              hoverState={hoveredCard}
+              navigationPath="www.google.com"
+            />
+          </Grid>
+
+          {/* Rent Payments Due */}
+          <Grid item size={{ xs: 12, lg: 6 }}>
+            <DashboardCard
+              title="Rent Payments Due"
+              subtitle="Thursday, 10 Jul 2025"
+              action={
+                <Chip
+                  label="1 Pending"
+                  size="small"
+                  sx={{
+                    bgcolor: "#fff3e0",
+                    color: "#f57c00",
+                    fontWeight: 600,
+                    fontSize: "0.75rem",
+                  }}
+                />
+              }
+            >
+              <List sx={{ p: 0 }}>
+                {rentPayments.map((payment) => (
+                  <ListItem
+                    key={payment.id}
+                    sx={{
+                      borderRadius: 1,
+                      mb: 1,
+                      bgcolor: "#fff",
+                      border: "1px solid #e0e0e0",
+                      p: 2,
+                    }}
+                  >
+                    <ListItemAvatar>
+                      <Avatar
+                        sx={{ bgcolor: "#ffebee", width: 40, height: 40 }}
+                      >
+                        <Receipt sx={{ fontSize: 20, color: "#f44336" }} />
+                      </Avatar>
+                    </ListItemAvatar>
+                    <ListItemText
+                      primary={
+                        <Stack direction="row" spacing={1} alignItems="center">
+                          <Typography
+                            variant="body1"
+                            fontWeight={600}
+                            color="#333"
+                          >
+                            {payment.apartment}
+                          </Typography>
+                          <Typography
+                            variant="body2"
+                            color="#666"
+                            fontWeight={400}
+                          >
+                            {payment.userType}
+                          </Typography>
+                        </Stack>
+                      }
+                      secondary={
+                        <Stack
+                          direction="row"
+                          spacing={1}
+                          alignItems="center"
+                          sx={{ mt: 0.5 }}
+                        >
+                          <CalendarMonth sx={{ fontSize: 16, color: "#666" }} />
+                          <Typography
+                            variant="body2"
+                            color="#666"
+                            fontWeight={400}
+                          >
+                            {payment.date}
+                          </Typography>
+                        </Stack>
+                      }
+                    />
+                    <ListItemSecondaryAction>
+                      <Stack alignItems="end" spacing={1}>
+                        <Typography variant="h6" fontWeight={600} color="#333">
+                          ₹{payment.amount.toLocaleString()}
+                        </Typography>
+                        <Chip
+                          label={payment.status}
+                          size="small"
+                          sx={{
+                            bgcolor: "#ffebee",
+                            color: "#f44336",
+                            fontWeight: 600,
+                            fontSize: "0.7rem",
+                          }}
+                        />
+                      </Stack>
+                    </ListItemSecondaryAction>
+                  </ListItem>
+                ))}
+              </List>
+            </DashboardCard>
+          </Grid>
+
+          {/* Open and Pending Tickets */}
+          <Grid item size={{ xs: 12, lg: 6 }}>
+            <DashboardCard
+              title="Open and Pending Tickets"
+              isEmpty={tickets.length === 0}
+              emptyIcon={<CheckCircle sx={{ fontSize: 22, color: "#666" }} />}
+              emptyText="No tickets found"
+            />
+          </Grid>
+
+          {/* Utility Bills */}
+          <Grid item size={{ xs: 12, lg: 6 }}>
+            <DashboardCard
+              title="Utility Bills Payments Due"
+              action={
+                <Chip
+                  label={`₹${totalDue.toFixed(2)} Total Due`}
+                  size="small"
+                  sx={{
+                    bgcolor: "#ffebee",
+                    color: "#f44336",
+                    fontWeight: 600,
+                    fontSize: "0.75rem",
+                  }}
+                />
+              }
+            >
+              <List sx={{ p: 0 }}>
+                {utilityBills.map((bill) => (
+                  <ListItem
+                    key={bill.id}
+                    sx={{
+                      borderRadius: 1,
+                      mb: 1,
+                      bgcolor: "#fff",
+                      border: "1px solid #e0e0e0",
+                      p: 2,
+                    }}
+                  >
+                    <ListItemAvatar>
+                      <Avatar
+                        sx={{ bgcolor: "#e3f2fd", width: 40, height: 40 }}
+                      >
+                        <WaterDrop sx={{ fontSize: 20, color: "#1976d2" }} />
+                      </Avatar>
+                    </ListItemAvatar>
+                    <ListItemText
+                      primary={
+                        <Stack direction="row" spacing={1} alignItems="center">
+                          <Typography
+                            variant="body1"
+                            fontWeight={600}
+                            color="#333"
+                          >
+                            {bill.apartment}
+                          </Typography>
+                          <Chip
+                            label={bill.billType}
+                            size="small"
+                            sx={{
+                              bgcolor: "#e3f2fd",
+                              color: "#1976d2",
+                              fontWeight: 600,
+                              fontSize: "0.7rem",
+                              height: "22px",
+                            }}
+                          />
+                        </Stack>
+                      }
+                      secondary={
+                        <Stack
+                          direction="row"
+                          spacing={1}
+                          alignItems="center"
+                          sx={{ mt: 0.5 }}
+                        >
+                          <CalendarMonth sx={{ fontSize: 16, color: "#666" }} />
+                          <Typography
+                            variant="body2"
+                            color="#666"
+                            fontWeight={400}
+                          >
+                            {bill.date}
+                          </Typography>
+                        </Stack>
+                      }
+                    />
+                    <ListItemSecondaryAction>
+                      <Stack alignItems="end" spacing={1}>
+                        <Typography variant="h6" fontWeight={600} color="#333">
+                          ₹{bill.amount}
+                        </Typography>
+                        <Chip
+                          label={bill.status}
+                          size="small"
+                          sx={{
+                            bgcolor: "#ffebee",
+                            color: "#f44336",
+                            fontWeight: 600,
+                            fontSize: "0.7rem",
+                          }}
+                        />
+                      </Stack>
+                    </ListItemSecondaryAction>
+                  </ListItem>
+                ))}
+              </List>
+            </DashboardCard>
+          </Grid>
+
+          {/* Today's Visitors */}
+          <Grid item size={{ xs: 12, lg: 6 }}>
+            <DashboardCard
+              title="Today's Visitors"
+              subtitle="Thursday, 10 Jul 2025"
+              isEmpty={true}
+              emptyIcon={<Groups sx={{ fontSize: 22, color: "#666" }} />}
+              emptyText="No visitors found"
+            />
+          </Grid>
+
+          {/* Notices */}
+          <Grid item size={{ xs: 12, lg: 6 }}>
+            <DashboardCard title="Notices">
+              <List sx={{ p: 0 }}>
+                {notices.map((notice) => (
+                  <ListItem
+                    key={notice.id}
+                    sx={{
+                      borderRadius: 1,
+                      mb: 1,
+                      bgcolor: "#fff",
+                      border: "1px solid #e0e0e0",
+                      p: 2,
+                      cursor: "pointer",
+                      "&:hover": {
+                        bgcolor: "#f5f5f5",
+                      },
+                    }}
+                  >
+                    <ListItemAvatar>
+                      <Avatar
+                        sx={{ bgcolor: "#e3f2fd", width: 30, height: 30 }}
+                      >
+                        <Notifications
+                          sx={{ fontSize: 18, color: "#1976d2" }}
+                        />
+                      </Avatar>
+                    </ListItemAvatar>
+                    <ListItemText
+                      primary={
+                        <Typography
+                          variant="body1"
+                          fontWeight={500}
+                          color="#333"
+                        >
+                          {notice.title}
+                        </Typography>
+                      }
+                    />
+                  </ListItem>
+                ))}
+              </List>
+            </DashboardCard>
+          </Grid>
+        </Grid>
+      </Container>
     </Box>
   );
 };
