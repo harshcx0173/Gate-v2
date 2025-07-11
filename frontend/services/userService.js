@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = "https://gate-v2.onrender.com/api/users";
+const API_URL = "http://localhost:8000/api/users";
 
 // export const getUsers = async (page = 1, search = "") => 
 //     axios.get(`${API_URL}?page=${page}&search=${search}`);

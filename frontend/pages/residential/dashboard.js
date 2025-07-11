@@ -79,7 +79,43 @@ const ResidentDashboard = () => {
     },
   ];
 
-  const tickets = [];
+  const tickets = [
+    {
+      id: 1,
+      ticketId: "85025899",
+      type: "Owner",
+      assignedTo: "Admin",
+      status: "Open",
+    },
+    {
+      id: 2,
+      ticketId: "26400932",
+      type: "Owner",
+      assignedTo: "Linda Martinez",
+      status: "Pending",
+    },
+    {
+      id: 3,
+      ticketId: "15276787",
+      type: "Owner",
+      assignedTo: "Jennifer Garcia",
+      status: "Open",
+    },
+    {
+      id: 4,
+      ticketId: "12345678",
+      type: "Owner",
+      assignedTo: "John Doe",
+      status: "Pending",
+    },
+    {
+      id: 5,
+      ticketId: "87654321",
+      type: "Owner",
+      assignedTo: "Jane Smith",
+      status: "Open",
+    },
+  ];
 
   const utilityBills = [
     {
@@ -133,11 +169,10 @@ const ResidentDashboard = () => {
     stat,
     index,
     navigationPath,
-    hoverState,
-    setHoverState,
+    onHover,
+    onLeave,
+    isHovered,
   }) => {
-    const isHovered = hoverState === stat.title;
-
     const navigate = useRouter();
 
     const handleTitleClick = (e) => {
@@ -146,6 +181,7 @@ const ResidentDashboard = () => {
         navigate.push(navigationPath);
       }
     };
+
     return (
       <Card
         elevation={0}
@@ -163,8 +199,8 @@ const ResidentDashboard = () => {
           border: "1px solid #e0e0e0",
           borderRadius: 2,
         }}
-        // onMouseEnter={() => setHoverState?.(stat.title)}
-        // onMouseLeave={() => setHoverState?.(null)}
+        onMouseEnter={() => onHover && onHover(stat.title)}
+        onMouseLeave={() => onLeave && onLeave()}
         onClick={() => setSelectedCard(index)}
       >
         <CardContent sx={{ p: 2 }}>
@@ -295,13 +331,7 @@ const ResidentDashboard = () => {
           >
             Dashboard
           </Typography>
-          {/* <Stack direction="row" spacing={1} alignItems="center">
-            <CalendarToday sx={{ fontSize: 18, color: "#666" }} />
-            <Typography variant="body2" color="#666" fontWeight={500}>
-              Thursday, 10 Jul, 03:33 PM
-            </Typography>
-          </Stack> */}
-             <LiveTime />
+          <LiveTime />
         </Toolbar>
       </AppBar>
 
@@ -310,7 +340,13 @@ const ResidentDashboard = () => {
         <Grid container spacing={3} sx={{ mb: 3 }}>
           {stats.map((stat, index) => (
             <Grid item size={{ xs: 12, md: 4, lg: 4 }} key={index}>
-              <StatCard stat={stat} index={index} />
+              <StatCard
+                stat={stat}
+                index={index}
+                onHover={setHoveredCard}
+                onLeave={() => setHoveredCard(null)}
+                isHovered={hoveredCard === stat.title}
+              />
             </Grid>
           ))}
         </Grid>
@@ -325,9 +361,6 @@ const ResidentDashboard = () => {
               isEmpty={todaysBookings.length === 0}
               emptyIcon={<Event sx={{ fontSize: 22, color: "#666" }} />}
               emptyText="No bookings found"
-              setHoverState={setHoveredCard}
-              hoverState={hoveredCard}
-              navigationPath="www.google.com"
             />
           </Grid>
 
@@ -432,10 +465,194 @@ const ResidentDashboard = () => {
           <Grid item size={{ xs: 12, lg: 6 }}>
             <DashboardCard
               title="Open and Pending Tickets"
-              isEmpty={tickets.length === 0}
-              emptyIcon={<CheckCircle sx={{ fontSize: 22, color: "#666" }} />}
-              emptyText="No tickets found"
-            />
+              action={
+                <Stack direction="row" spacing={1}>
+                  <Chip
+                    label={`${
+                      tickets.filter((t) => t.status === "Pending").length
+                    } Pending`}
+                    size="small"
+                    sx={{
+                      bgcolor: "#fff3e0",
+                      color: "#f57c00",
+                      fontWeight: 600,
+                      fontSize: "0.75rem",
+                    }}
+                  />
+                  <Chip
+                    label={`${
+                      tickets.filter((t) => t.status === "Open").length
+                    } Open`}
+                    size="small"
+                    sx={{
+                      bgcolor: "#ffebee",
+                      color: "#f44336",
+                      fontWeight: 600,
+                      fontSize: "0.75rem",
+                    }}
+                  />
+                </Stack>
+              }
+            >
+              <Box
+                sx={{
+                  maxHeight: 320,
+                  overflowY: "hidden",
+                  "&:hover": {
+                    overflowY: "auto",
+                    "&::-webkit-scrollbar": {
+                      width: "6px",
+                    },
+                    "&::-webkit-scrollbar-track": {
+                      background: "#f1f1f1",
+                      borderRadius: "3px",
+                    },
+                    "&::-webkit-scrollbar-thumb": {
+                      background: "#c1c1c1",
+                      borderRadius: "3px",
+                    },
+                    "&::-webkit-scrollbar-thumb:hover": {
+                      background: "#a8a8a8",
+                    },
+                  },
+                }}
+              >
+                <List sx={{ p: 0 }}>
+                  {tickets.map((ticket) => (
+                    <ListItem
+                      key={ticket.id}
+                      sx={{
+                        borderRadius: 2,
+                        mb: 1.5,
+                        bgcolor: "#fff",
+                        border: "1px solid #e0e0e0",
+                        p: 2.5,
+                        cursor: "pointer",
+                        transition: "all 0.2s ease",
+                        boxShadow: "0px 1px 3px rgba(0, 0, 0, 0.05)",
+                        "&:hover": {
+                          bgcolor: "#fff",
+                          boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.08)",
+                          border: "1px solid #d0d0d0",
+                          "& .chevron-icon": {
+                            opacity: 1,
+                            visibility: "visible",
+                          },
+                        },
+                        position: "relative",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        pr: 3,
+                      }}
+                    >
+                      {/* Left Section - Ticket Icon + Number + Owner */}
+                      <Box
+                        sx={{ display: "flex", alignItems: "center", gap: 2 }}
+                      >
+                        <Avatar
+                          sx={{
+                            bgcolor:
+                              ticket.status === "Pending"
+                                ? "#fff3e0"
+                                : "#ffebee",
+                            width: 48,
+                            height: 48,
+                          }}
+                        >
+                          <Assignment
+                            sx={{
+                              fontSize: 24,
+                              color:
+                                ticket.status === "Pending"
+                                  ? "#f57c00"
+                                  : "#f44336",
+                            }}
+                          />
+                        </Avatar>
+                        <Box>
+                          <Typography
+                            variant="h6"
+                            fontWeight={500}
+                            color="#000"
+                            sx={{
+                              fontSize: 16,
+                              mb: 0.3,
+                              lineHeight: 1.2,
+                            }}
+                          >
+                            {ticket.ticketId}
+                          </Typography>
+                          <Typography
+                            variant="body2"
+                            color="#6b7280"
+                            fontWeight={400}
+                            sx={{ fontSize: "0.875rem", lineHeight: 1.2 }}
+                          >
+                            {ticket.type}
+                          </Typography>
+                        </Box>
+                      </Box>
+
+                      {/* Middle Section - User Icon + Admin Name */}
+                      <Box
+                        sx={{ display: "flex", alignItems: "center", gap: 1 }}
+                      >
+                        <AccountCircle
+                          sx={{ fontSize: 16, color: "#9e9e9e" }}
+                        />
+                        <Typography
+                          variant="body2"
+                          color="#6b7280"
+                          fontWeight={400}
+                          sx={{ fontSize: "0.875rem", lineHeight: 1.2 }}
+                        >
+                          {ticket.assignedTo}
+                        </Typography>
+                      </Box>
+
+                      {/* Right Section - Status + Chevron */}
+                      <Box
+                        sx={{ display: "flex", alignItems: "center", gap: 1 }}
+                      >
+                        <Chip
+                          label={ticket.status}
+                          size="small"
+                          sx={{
+                            bgcolor:
+                              ticket.status === "Pending"
+                                ? "#fff8e1"
+                                : "#ffebee",
+                            color:
+                              ticket.status === "Pending"
+                                ? "#f57c00"
+                                : "#c62828",
+                            fontWeight: 500,
+                            fontSize: "0.8125rem",
+                            height: "32px",
+                            borderRadius: "8px",
+                            "& .MuiChip-label": {
+                              px: 2,
+                              py: 0.5,
+                            },
+                          }}
+                        />
+                        <ChevronRight
+                          className="chevron-icon"
+                          sx={{
+                            fontSize: 20,
+                            color: "#c62828",
+                            opacity: 0,
+                            visibility: "hidden",
+                            transition: "all 0.2s ease",
+                          }}
+                        />
+                      </Box>
+                    </ListItem>
+                  ))}
+                </List>
+              </Box>
+            </DashboardCard>
           </Grid>
 
           {/* Utility Bills */}
