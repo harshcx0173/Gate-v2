@@ -39,8 +39,8 @@ import { io } from "socket.io-client"; // ✅ ADD THIS LINE
 
 const baseURL =
   typeof window !== "undefined" && window.location.hostname === "192.168.1.38"
-    ? "http://localhost:8000"
-    : "http://localhost:8000";
+    ? "https://gate-v2.onrender.com"
+    : "https://gate-v2.onrender.com";
 
 const TowersPage = () => {
   // console.log(NotificationSound)
